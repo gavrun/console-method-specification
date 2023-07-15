@@ -14,8 +14,6 @@
              * monthly payment is paid by the borrower to the bank, it covers one month worth of interest and extra reduced interest;
              */
 
-            Console.WriteLine("\n");
-
             /* specification for program
              * 
              * this program tells me how much i'm going to save, and how much faster i'm going to pay it off, 
@@ -36,8 +34,7 @@
              * if an invalid value is entered then an error message is displayed and the user is prompted to try again
              */
 
-            Console.WriteLine("\n");
-
+            Console.WriteLine();
 
             /* method specification
              * 
@@ -60,7 +57,6 @@
             decimal principal;
             decimal interestRate;
             decimal monthlyPayment;
-
             while (true)
             {
                 principal = ReadPositiveDecimal("Enter current principal:");
@@ -68,9 +64,7 @@
                 monthlyPayment = ReadPositiveDecimal("Enter desired monthly payment:");
 
                 if (principal * interestRate / 1200 < monthlyPayment)
-                {
                     break;
-                }
                 Console.WriteLine("Sorry, the monthly payment does not cover the interest");
             }
 
@@ -113,6 +107,25 @@
              */
 
             int totalMonths = PayoffMonths(principal, interestRate, monthlyPayment);
+
+            // totals
+            Console.WriteLine();
+            Console.WriteLine("Your total interest: {0:C2}", totalInterest);
+            Console.WriteLine("Payoff date: {0:MMM yyyy}", 
+                DateTime.Now.AddMonths(totalMonths));
+            Console.WriteLine();
+
+            // payoffs
+            decimal[] extraPayments = { 100.0m, 300.0m, 1000.0m};
+            foreach (decimal extraPayment in extraPayments)
+            {
+                var newInterest = TotalInterest(principal, interestRate, monthlyPayment +  extraPayment);
+                var newMonths = PayoffMonths(principal, interestRate, monthlyPayment +  extraPayment);
+
+                Console.WriteLine("Extra payment of {0:C2} reduces interest by {1:C2} and time by {2} monhts", extraPayment, totalInterest -  newInterest, totalMonths - newMonths);
+            }
+            Console.WriteLine();
+            Console.WriteLine("Good bye!");
         }
 
         static decimal ReadPositiveDecimal(string prompt)
@@ -179,6 +192,5 @@
             }
             return totalMonths;
         }
-
     }
 }
