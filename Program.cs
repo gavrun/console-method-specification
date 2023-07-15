@@ -45,7 +45,7 @@
              * repeatedly prompt the user until a valid positive (or zero) decimal is entered
              * name
              * ReadPositiveDecimal
-             * has reciever?
+             * has receiver?
              * no, static method
              * input
              * prompt string
@@ -57,11 +57,62 @@
              * prompt must not be null
              */
 
-            decimal principal = ReadPositiveDecimal("Enter current principal:");
-            decimal interestRate = ReadPositiveDecimal("Enter interest rate:");
-            decimal monthlyPayment = ReadPositiveDecimal("Enter desired monthly payment:");
+            decimal principal;
+            decimal interestRate;
+            decimal monthlyPayment;
 
+            while (true)
+            {
+                principal = ReadPositiveDecimal("Enter current principal:");
+                interestRate = ReadPositiveDecimal("Enter interest rate:");
+                monthlyPayment = ReadPositiveDecimal("Enter desired monthly payment:");
 
+                if (principal * interestRate / 1200 < monthlyPayment)
+                {
+                    break;
+                }
+                Console.WriteLine("Sorry, the monthly payment does not cover the interest");
+            }
+
+            /* method specification
+             * 
+             * purpose
+             * compute toatl interest paid on the load given principle, interest rate, and monthly payment as decimal values
+             * name
+             * TotalInterest
+             * has receiver?
+             * no, static method
+             * input
+             * three decimal values
+             * output
+             * one decimal value
+             * side effects
+             * none
+             * error case 1
+             * input values must be positive
+             */
+
+            decimal totalInterest = TotalInterest(principal, interestRate, monthlyPayment);
+
+            /* method specification
+             * 
+             * purpose
+             * compute number of months to pay off the loan given principal, interest rate, and monthly payment as decimal values
+             * name
+             * PayoffMonths
+             * has receiver?
+             * no, static method
+             * input
+             * three decimal values
+             * output
+             * integer value
+             * side effects
+             * none
+             * error case 1
+             * input values must be positive
+             */
+
+            int totalMonths = PayoffMonths(principal, interestRate, monthlyPayment);
         }
 
         static decimal ReadPositiveDecimal(string prompt)
@@ -85,6 +136,51 @@
             return result;
         }
 
+        static decimal TotalInterest(decimal principal, decimal interestRate, decimal monthlyPayment)
+        {
+            if (principal < 0.0m)
+                throw new ArgumentException("principal must be positive", "principal");
+            if (interestRate < 0.0m)
+                throw new ArgumentException("interest rate must be positive", "interestRate");
+            if (monthlyPayment < 0.0m)
+                throw new ArgumentException("monthly payment must be positive", "monthlyPayment");
+            if (principal * interestRate / 1200 >= monthlyPayment)
+                throw new ArgumentException("monthly payment does not cover interest", "monthlyPayment");
+
+            decimal totalInterest = 0.0m;
+            decimal currentPrincipal = principal;
+            while (0.0m < currentPrincipal)
+            {
+                decimal currntInterest = currentPrincipal * interestRate / 1200;
+                decimal reduction = monthlyPayment - currntInterest;
+                currentPrincipal = currntInterest - reduction;
+                totalInterest = totalInterest + currntInterest;
+            }
+            return totalInterest;
+        }
+
+        static int PayoffMonths(decimal principal, decimal interestRate, decimal monthlyPayment)
+        {
+            if (principal < 0.0m)
+                throw new ArgumentException("principal must be positive", "principal");
+            if (interestRate < 0.0m)
+                throw new ArgumentException("interest rate must be positive", "interestRate");
+            if (monthlyPayment < 0.0m)
+                throw new ArgumentException("monthly payment must be positive", "monthlyPayment");
+            if (principal * interestRate / 1200 >= monthlyPayment)
+                throw new ArgumentException("monthly payment does not cover interest", "monthlyPayment");
+
+            int totalMonths = 0;
+            decimal currentPrincipal = principal;
+            while (0 < currentPrincipal)
+            {
+                decimal currentInterest = currentPrincipal * interestRate / 1200;
+                decimal reduction = monthlyPayment - currentInterest;
+                currentPrincipal = currentPrincipal - monthlyPayment;
+                totalMonths += 1;
+            }
+            return totalMonths;
+        }
 
     }
 }
