@@ -125,13 +125,11 @@
 
                 bool success = decimal.TryParse(principalText, out result);
                 if (!success)
-                {
-                        Console.WriteLine("Enter a decimal value instead please");
-                    else if (result < 0.0m)
-                        Console.WriteLine("Enter a positive value please");
-                    else
-                        break;
-                }
+                Console.WriteLine("Enter a decimal value instead please");
+                else if (result < 0.0m)
+                    Console.WriteLine("Enter a positive value please");
+                else
+                    break;
             }
             return result;
         }
